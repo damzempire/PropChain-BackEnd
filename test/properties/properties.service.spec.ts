@@ -7,6 +7,7 @@ import { UpdatePropertyDto } from '../../src/properties/dto/update-property.dto'
 import { PropertyQueryDto } from '../../src/properties/dto/property-query.dto';
 import { NotFoundException, UserNotFoundException, InvalidInputException, BusinessRuleViolationException } from '../../src/common/errors/custom.exceptions';
 import { Decimal } from '@prisma/client/runtime/library';
+import { MultiLevelCacheService } from '../../src/common/cache/multi-level-cache.service';
 
 describe('PropertiesService', () => {
   let service: PropertiesService;
@@ -65,6 +66,12 @@ describe('PropertiesService', () => {
     get: jest.fn(),
   };
 
+  const mockCacheService = {
+    wrap: jest.fn(async (_key, factory) => factory()),
+    del: jest.fn(),
+    invalidateByPattern: jest.fn(),
+  };
+
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
       providers: [
@@ -77,6 +84,10 @@ describe('PropertiesService', () => {
           provide: ConfigService,
           useValue: mockConfigService,
         },
+        {
+          provide: MultiLevelCacheService,
+          useValue: mockCacheService,
+        },
       ],
     }).compile();
 
@@ -87,6 +98,7 @@ describe('PropertiesService', () => {
 
   afterEach(() => {
     jest.clearAllMocks();
+    mockCacheService.wrap.mockImplementation(async (_key, factory) => factory());
   });
 
   describe('create', () => {
