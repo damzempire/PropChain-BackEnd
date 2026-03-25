@@ -26,7 +26,9 @@ describe('DocumentController', () => {
       validate: jest.fn().mockResolvedValue(undefined),
     };
     const configService: Partial<ConfigService> = {
-      get: jest.fn((key: string, defaultValue: any) => defaultValue),
+      get: jest.fn().mockImplementation((key: string, defaultValue?: any) => {
+        return defaultValue;
+      }),
     };
     
     const controller = new DocumentController(
