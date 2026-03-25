@@ -8,6 +8,7 @@ export class TracingService {
 
   init() {
     // Initialize OpenTelemetry with service name and auto-instrumentation
+    // Note: Resource configuration can be extended if needed
     try {
       this.sdk = new NodeSDK({
         serviceName: 'propchain-backend',
