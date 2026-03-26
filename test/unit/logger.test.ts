@@ -1,4 +1,4 @@
-import { LogEntry } from 'winston';
+import { Logger, LogEntry } from '../../src/lib/logger';
 
 // Capture stdout/stderr writes
 function captureOutput(fn: () => void): { stdout: LogEntry[]; stderr: LogEntry[] } {
