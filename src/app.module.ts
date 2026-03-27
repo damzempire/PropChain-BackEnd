@@ -1,4 +1,9 @@
-import { Module, NestModule, MiddlewareConsumer, ClassSerializerInterceptor } from '@nestjs/common';
+import {
+  Module,
+  NestModule,
+  MiddlewareConsumer,
+  ClassSerializerInterceptor,
+} from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { ScheduleModule } from '@nestjs/schedule';
@@ -24,7 +29,12 @@ import { ResponseInterceptor } from './common/interceptors/response.interceptor'
 import { AllExceptionsFilter } from './common/errors/error.filter';
 
 // I18n
-import { I18nModule, AcceptLanguageResolver, QueryResolver, HeaderResolver } from 'nestjs-i18n';
+import {
+  I18nModule,
+  AcceptLanguageResolver,
+  QueryResolver,
+  HeaderResolver,
+} from 'nestjs-i18n';
 import * as path from 'path';
 
 // Redis
@@ -85,8 +95,8 @@ import { BoundaryValidationModule } from './common/validation';
         '.env.local',
         '.env',
       ],
-      cache: true, // Enable configuration caching
-      expandVariables: true, // Allow environment variable expansion
+      cache: true,
+      expandVariables: true,
     }),
 
     ConfigurationModule,
@@ -101,7 +111,11 @@ import { BoundaryValidationModule } from './common/validation';
           watch: true,
         },
       }),
-      resolvers: [{ use: QueryResolver, options: ['lang'] }, AcceptLanguageResolver, new HeaderResolver(['x-lang'])],
+      resolvers: [
+        { use: QueryResolver, options: ['lang'] },
+        AcceptLanguageResolver,
+        new HeaderResolver(['x-lang']),
+      ],
       inject: [ConfigService],
     }),
 
@@ -150,7 +164,7 @@ import { BoundaryValidationModule } from './common/validation';
     FilesModule,
     ValuationModule,
     DocumentsModule,
-    SecurityModule, // Add security module
+    SecurityModule,
 
     // Compliance & Security
     AuditModule,
@@ -173,8 +187,8 @@ import { BoundaryValidationModule } from './common/validation';
     CompressionModule,
   ],
   controllers: [
-    AuditController, // Add the audit controller
-    CompressionController, // Add the compression controller
+    AuditController,
+    CompressionController,
   ],
   providers: [
     {
@@ -202,13 +216,10 @@ import { BoundaryValidationModule } from './common/validation';
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
     consumer
-      // Static content caching
       .apply(StaticCacheMiddleware)
       .forRoutes('*')
-      // Header validation for security
       .apply(HeaderValidationMiddleware)
       .forRoutes('*')
-      // Auth rate limiting
       .apply(AuthRateLimitMiddleware)
       .forRoutes('/auth*');
   }
