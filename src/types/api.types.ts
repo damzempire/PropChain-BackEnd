@@ -1,21 +1,21 @@
 // API-related type definitions
 
 // HTTP request/response types
-export interface HttpRequest {
+export interface HttpRequest<T = unknown> {
   method: string;
   url: string;
   headers: Record<string, string>;
   query: Record<string, string | string[]>;
   params: Record<string, string>;
-  body: any;
+  body: T;
   ip: string;
   userAgent: string;
 }
 
-export interface HttpResponse {
+export interface HttpResponse<T = unknown> {
   statusCode: number;
   headers: Record<string, string>;
-  body: any;
+  body: T;
   timestamp: Date;
 }
 
@@ -98,8 +98,8 @@ export interface ApiSchema {
   type: string;
   format?: string;
   description?: string;
-  example?: any;
-  enum?: any[];
+  example?: unknown;
+  enum?: unknown[];
   properties?: Record<string, ApiSchema>;
   items?: ApiSchema;
   required?: string[];
@@ -187,18 +187,18 @@ export interface ApiClientConfig {
   };
 }
 
-export interface ApiClientResponse<T = any> {
+export interface ApiClientResponse<T = unknown> {
   data: T;
   status: number;
   statusText: string;
   headers: Record<string, string>;
-  config: any;
+  config: Record<string, unknown>;
 }
 
 // WebSocket types
-export interface WebSocketMessage {
+export interface WebSocketMessage<T = unknown> {
   type: string;
-  payload: any;
+  payload: T;
   timestamp: Date;
   id?: string;
 }
@@ -214,9 +214,9 @@ export interface WebSocketConnection {
   subscriptions: string[];
 }
 
-export interface WebSocketEvent {
+export interface WebSocketEvent<T = unknown> {
   event: string;
-  data: any;
+  data: T;
   timestamp: Date;
   userId?: string;
   sessionId?: string;
@@ -225,7 +225,7 @@ export interface WebSocketEvent {
 // GraphQL types (if needed)
 export interface GraphQLRequest {
   query: string;
-  variables?: Record<string, any>;
+  variables?: Record<string, unknown>;
   operationName?: string;
 }
 
@@ -233,10 +233,10 @@ export interface GraphQLError {
   message: string;
   locations?: { line: number; column: number }[];
   path?: (string | number)[];
-  extensions?: Record<string, any>;
+  extensions?: Record<string, unknown>;
 }
 
-export interface GraphQLResponse<T = any> {
+export interface GraphQLResponse<T = unknown> {
   data?: T;
   errors?: GraphQLError[];
 }

@@ -14,6 +14,7 @@ import { ConfigService } from '@nestjs/config';
 import { MultiLevelCacheService } from '../common/cache/multi-level-cache.service';
 import { BaseService } from '../common/services/base.service';
 import { BoundaryValidationService } from '../common/validation';
+import { UserPreferences, PrivacySettings, TransactionMetadata } from '../utils/type-validation.utils';
 
 /**
  * UserService
@@ -165,7 +166,10 @@ export class UserService extends BaseService {
     password: string | null;
     role: string;
     isVerified: boolean;
-    [key: string]: any;
+    firstName: string;
+    lastName: string;
+    createdAt: Date;
+    updatedAt: Date;
   } | null> {
     return this.cacheService.wrap(
       `user:email:${email}`,
@@ -399,7 +403,7 @@ export class UserService extends BaseService {
   /**
    * Update user preferences (JSON)
    */
-  async updatePreferences(userId: string, preferences: any) {
+  async updatePreferences(userId: string, preferences: UserPreferences) {
     const user = await this.prisma.user.update({
       where: { id: userId },
       data: { preferences },
@@ -411,7 +415,7 @@ export class UserService extends BaseService {
   /**
    * Track user activity
    */
-  async logActivity(userId: string, action: string, metadata?: any) {
+  async logActivity(userId: string, action: string, metadata?: TransactionMetadata) {
     const activity = await this.prisma.userActivity.create({
       data: { userId, action, metadata },
     });
@@ -511,7 +515,28 @@ export class UserService extends BaseService {
    * List followers of a user
    */
   async getFollowers(userId: string, limit = 50) {
-    const query: any = {
+    const query: {
+      where: { followingId: string; status: string };
+      take: number;
+      orderBy: { createdAt: string };
+      relationLoadStrategy: string;
+      select: {
+        id: boolean;
+        createdAt: boolean;
+        status: boolean;
+        follower: {
+          select: {
+            id: boolean;
+            email: boolean;
+            role: boolean;
+            bio: boolean;
+            location: boolean;
+            avatarUrl: boolean;
+            isVerified: boolean;
+          };
+        };
+      };
+    } = {
       where: { followingId: userId, status: 'active' },
       take: limit,
       orderBy: { createdAt: 'desc' },
@@ -546,7 +571,28 @@ export class UserService extends BaseService {
    * List users a user is following
    */
   async getFollowing(userId: string, limit = 50) {
-    const query: any = {
+    const query: {
+      where: { followerId: string; status: string };
+      take: number;
+      orderBy: { createdAt: string };
+      relationLoadStrategy: string;
+      select: {
+        id: boolean;
+        createdAt: boolean;
+        status: boolean;
+        following: {
+          select: {
+            id: boolean;
+            email: boolean;
+            role: boolean;
+            bio: boolean;
+            location: boolean;
+            avatarUrl: boolean;
+            isVerified: boolean;
+          };
+        };
+      };
+    } = {
       where: { followerId: userId, status: 'active' },
       take: limit,
       orderBy: { createdAt: 'desc' },
@@ -600,7 +646,7 @@ export class UserService extends BaseService {
   /**
    * Update privacy settings
    */
-  async updatePrivacySettings(userId: string, privacySettings: any) {
+  async updatePrivacySettings(userId: string, privacySettings: PrivacySettings) {
     const user = await this.prisma.user.update({
       where: { id: userId },
       data: { privacySettings },

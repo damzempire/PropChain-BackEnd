@@ -44,3 +44,15 @@ export * from './validation.types';
  * Includes authentication types, MFA interfaces, and security event types
  */
 export * from './security.types';
+
+/**
+ * Export all API-related type definitions
+ * Includes HTTP request/response types, WebSocket types, and GraphQL types
+ */
+export * from './api.types';
+
+/**
+ * Export all guard utilities
+ * Includes type guard functions for runtime type checking
+ */
+export * from './guards';

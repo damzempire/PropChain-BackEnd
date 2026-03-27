@@ -1,4 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
+import { UserPreferences, PrivacySettings } from '../../utils/type-validation.utils';
 
 export class UserResponseDto {
   @ApiProperty({
@@ -54,14 +55,14 @@ export class UserResponseDto {
     example: '{ "theme": "dark", "notifications": true }',
     type: Object,
   })
-  preferences?: any;
+  preferences?: UserPreferences;
 
   @ApiPropertyOptional({
     description: 'User privacy settings (JSON object)',
     example: '{ "profileVisible": true }',
     type: Object,
   })
-  privacySettings?: any;
+  privacySettings?: PrivacySettings;
 
   @ApiPropertyOptional({
     description: 'Followers count',

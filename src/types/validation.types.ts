@@ -1,5 +1,5 @@
 // Validation types for DTOs and forms
-export interface ValidationRule<T = any> {
+export interface ValidationRule<T = unknown> {
   field: string;
   validator: (value: T) => boolean;
   message: string;
@@ -45,20 +45,20 @@ export interface ObjectConstraints {
 }
 
 // Custom validator types
-export type CustomValidator<T = any> = (value: T, context?: any) => boolean | Promise<boolean>;
+export type CustomValidator<T = unknown> = (value: T, context?: ValidationContext) => boolean | Promise<boolean>;
 
-export interface CustomValidationRule<T = any> {
+export interface CustomValidationRule<T = unknown> {
   name: string;
   validator: CustomValidator<T>;
-  message: string | ((value: T, context?: any) => string);
+  message: string | ((value: T, context?: ValidationContext) => string);
   async?: boolean;
 }
 
 // Validation context
 export interface ValidationContext {
   path: string;
-  parent?: any;
-  root?: any;
+  parent?: Record<string, unknown>;
+  root?: Record<string, unknown>;
   options?: ValidationOptions;
 }
 
@@ -75,13 +75,13 @@ export interface FieldError {
   path: string;
   message: string;
   code: string;
-  value?: any;
+  value?: unknown;
 }
 
 export interface ValidationErrorResult {
   isValid: false;
   errors: FieldError[];
-  value: any;
+  value: unknown;
 }
 
 export interface ValidationSuccessResult<T> {
@@ -90,7 +90,7 @@ export interface ValidationSuccessResult<T> {
   warnings?: FieldError[];
 }
 
-export type ValidationResult<T = any> = ValidationSuccessResult<T> | ValidationErrorResult;
+export type ValidationResult<T = unknown> = ValidationSuccessResult<T> | ValidationErrorResult;
 
 // Type guards for validation results
 export function isValidResult<T>(result: ValidationResult<T>): result is ValidationSuccessResult<T> {

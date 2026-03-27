@@ -4,6 +4,9 @@ import { IsEthereumAddress } from '../../common/validators/is-ethereum-address.v
 import { IsStrongPassword } from '../../common/validators/is-strong-password.validator';
 import { IsXssSafe } from '../../common/validators/xss.validator';
 import { IsNotSqlInjection } from '../../common/validators/sql-injection.validator';
+import { UserPreferences, PrivacySettings } from '../../utils/type-validation.utils';
+import { Type } from 'class-transformer';
+import { ValidateNested } from 'class-validator';
 
 export class CreateUserDto {
   @ApiProperty({
@@ -111,7 +114,9 @@ export class CreateUserDto {
     type: Object,
   })
   @IsOptional()
-  preferences?: any;
+  @Type(() => Object)
+  @ValidateNested()
+  preferences?: UserPreferences;
 
   @ApiPropertyOptional({
     description: 'User privacy settings (JSON object)',
@@ -119,5 +124,7 @@ export class CreateUserDto {
     type: Object,
   })
   @IsOptional()
-  privacySettings?: any;
+  @Type(() => Object)
+  @ValidateNested()
+  privacySettings?: PrivacySettings;
 }
