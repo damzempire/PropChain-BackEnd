@@ -1,0 +1,136 @@
+{
+  "name": "propchain-api-tests",
+  "description": "Comprehensive API testing suite for PropChain backend",
+  "testGeneration": {
+    "includeNegativeTests": true,
+    "includeEdgeCases": true,
+    "includePerformanceTests": true,
+    "mockDataStrategy": "realistic",
+    "customAssertions": [
+      "expect(response.body).toHaveProperty('id')",
+      "expect(response.body).toHaveProperty('createdAt')"
+    ]
+  },
+  "contractTesting": {
+    "enabled": true,
+    "contractsPath": "contracts",
+    "verificationOptions": {
+      "timeout": 30000,
+      "retries": 3,
+      "skipTlsVerification": false,
+      "customHeaders": {
+        "User-Agent": "PropChain-Contract-Tester/1.0"
+      },
+      "allowExtraResponseFields": false,
+      "strictHeaderMatching": true
+    }
+  },
+  "performanceTesting": {
+    "enabled": true,
+    "endpoints": [
+      {
+        "name": "health-check",
+        "method": "GET",
+        "url": "http://localhost:3000/api/v1/health",
+        "weight": 10,
+        "headers": {
+          "Accept": "application/json"
+        }
+      },
+      {
+        "name": "get-properties",
+        "method": "GET",
+        "url": "http://localhost:3000/api/v1/properties",
+        "weight": 5,
+        "query": {
+          "limit": "10",
+          "offset": "0"
+        }
+      },
+      {
+        "name": "create-property",
+        "method": "POST",
+        "url": "http://localhost:3000/api/v1/properties",
+        "weight": 2,
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer test-token"
+        },
+        "body": {
+          "title": "Test Property",
+          "description": "A test property for automated testing",
+          "price": 250000,
+          "location": {
+            "address": "123 Test St",
+            "city": "Test City",
+            "state": "TS",
+            "zipCode": "12345"
+          },
+          "propertyType": "residential",
+          "bedrooms": 3,
+          "bathrooms": 2,
+          "squareFeet": 1500
+        }
+      },
+      {
+        "name": "get-property-details",
+        "method": "GET",
+        "url": "http://localhost:3000/api/v1/properties/1",
+        "weight": 3
+      },
+      {
+        "name": "update-property",
+        "method": "PUT",
+        "url": "http://localhost:3000/api/v1/properties/1",
+        "weight": 1,
+        "headers": {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer test-token"
+        },
+        "body": {
+          "title": "Updated Test Property",
+          "price": 260000
+        }
+      },
+      {
+        "name": "get-users",
+        "method": "GET",
+        "url": "http://localhost:3000/api/v1/users",
+        "weight": 2,
+        "query": {
+          "limit": "5"
+        }
+      },
+      {
+        "name": "user-authentication",
+        "method": "POST",
+        "url": "http://localhost:3000/api/v1/auth/login",
+        "weight": 1,
+        "body": {
+          "email": "test@example.com",
+          "password": "test-password"
+        }
+      }
+    ],
+    "thresholds": {
+      "maxResponseTime": 2000,
+      "minRequestsPerSecond": 50,
+      "maxErrorRate": 2,
+      "maxMemoryUsage": 80,
+      "maxCpuUsage": 85
+    },
+    "config": {
+      "duration": 300,
+      "concurrency": 15,
+      "rampUpTime": 30,
+      "warmupRequests": 50,
+      "timeout": 30000,
+      "thinkTime": 100,
+      "distribution": "weighted"
+    }
+  },
+  "schedule": {
+    "enabled": true,
+    "cronExpression": "0 2 * * *"
+  }
+}

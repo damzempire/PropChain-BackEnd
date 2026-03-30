@@ -29,6 +29,12 @@
     "test:load": "jest --config ./jest.config.js --testPathPattern=load --passWithNoTests",
     "test:contracts": "jest --config ./jest.config.js --testPathPattern=contracts",
     "test:all": "npm run test:unit && npm run test:integration && npm run test:e2e && npm run test:security",
+    "test:comprehensive": "ts-node scripts/run-comprehensive-tests.ts",
+    "test:api-generation": "ts-node -r tsconfig-paths/register scripts/generate-api-tests.ts",
+    "test:contract-verification": "ts-node -r tsconfig-paths/register scripts/verify-contracts.ts",
+    "test:performance-suite": "ts-node -r tsconfig-paths/register scripts/run-performance-tests.ts",
+    "test:load-full": "ts-node -r tsconfig-paths/register scripts/run-load-tests.ts",
+    "test:stress": "ts-node -r tsconfig-paths/register scripts/run-stress-tests.ts",
     "build:ci": "npx tsc -p tsconfig.ci.json --noEmit",
     "test:ci": "jest --config ./jest.config.js --coverage --ci --reporters=default --reporters=jest-junit --watchAll=false",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --config ./jest.config.js --runInBand",
@@ -145,7 +151,9 @@
     "winston": "^3.11.0",
     "winston-daily-rotate-file": "^4.7.1",
     "xml2js": "^0.6.2",
-    "xss": "^1.0.15"
+    "xss": "^1.0.15",
+    "faker": "^6.6.6",
+    "jsonschema": "^1.4.1"
   },
   "devDependencies": {
     "@commitlint/cli": "^18.4.3",
