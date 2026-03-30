@@ -46,6 +46,7 @@ import { DocumentsModule } from './documents/documents.module';
 import { SecurityModule } from './security/security.module';
 import { BackupRecoveryModule } from './backup-recovery/backup-recovery.module';
 import { GatewayModule } from './gateway/gateway.module';
+import { ErrorsModule } from './errors/errors.module';
 
 // Compliance & Security Modules
 import { AuditModule } from './common/audit/audit.module';
@@ -155,6 +156,7 @@ import { BoundaryValidationModule } from './common/validation';
     ValuationModule,
     DocumentsModule,
     SecurityModule,
+    ErrorsModule,
 
     // Compliance & Security
     AuditModule,
